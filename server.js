@@ -1,3 +1,4 @@
+const fs = require("fs");
 const notes = require("./db/db.json");
 console.log(notes);
 const express = require("express");
@@ -14,28 +15,28 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.get("./api/notes", (req, res) => {
-  return res.json(notes);
+  res.sendFile(path.join(__dirname, "../db/db.json"));
 });
 
-app.post("/api/notes", (req, res) => {
-  const { title, text } = req.body;
+// app.post("/api/notes", (req, res) => {
+//   const { title, text } = req.body;
 
-  if (title && text) {
-    const newNote = {
-      title,
-      text,
-      note_id: id,
-    };
-    const response = {
-        status: 'success',
-        body: newNote
-    }
-    console.log(response)
-    res.status(201).json(response)
-  }else {
-    res.status(500).json('Error in posting review');
-  }
-});
+//   if (title && text) {
+//     const newNote = {
+//       title,
+//       text,
+//       note_id: id,
+//     };
+//     const response = {
+//         status: 'success',
+//         body: newNote
+//     }
+//     console.log(response)
+//     res.status(201).json(response)
+//   }else {
+//     res.status(500).json('Error in posting review');
+//   }
+// });
 
 app.get("./notes", (req, res) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
