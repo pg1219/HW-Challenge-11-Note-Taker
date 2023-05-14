@@ -14,31 +14,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-app.get("./api/notes", (req, res) => {
-  res.sendFile(path.join(__dirname, "../db/db.json"));
+app.get("/api/notes", (req, res) => {
+  res.json(notes);
 });
 
 app.post("/api/notes", (req, res) => {
-  const { title, text } = req.body;
-
-  if (title && text) {
-    const newNote = {
-      title,
-      text,
-      note_id: id,
-    };
-    const response = {
-        status: 'success',
-        body: newNote
-    }
-    console.log(response)
-    res.status(201).json(response)
-  }else {
-    res.status(500).json('Error in posting review');
-  }
+  const newNote = req.body;
+  newNote.id = id;
+  notes.push(newNote);
+  fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
+    err ? console.log(err) : res.send(newNote);
+  });
 });
 
-app.get("./notes", (req, res) => {
+app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "./db/public/notes.html"));
 });
 
@@ -47,3 +36,23 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, () => console.log("listening at http://localhost:${PORT}"));
+
+// app.post("/api/notes", (req, res) => {
+//   const { title, text } = req.body;
+
+//   if (title && text) {
+//     const newNote = {
+//       title,
+//       text,
+//       note_id: id,
+//     };
+//     const response = {
+//         status: 'success',
+//         body: newNote
+//     }
+//     console.log(response)
+//     res.status(201).json(response)
+//   }else {
+//     res.status(500).json('Error in posting review');
+//   }
+// });
