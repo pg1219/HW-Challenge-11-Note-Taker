@@ -39,11 +39,11 @@ app.post("/api/notes", (req, res) => {
 });
 
 app.get("./notes", (req, res) => {
-  res.sendFile(path.join(__dirname, "/notes.html"));
+  res.sendFile(path.join(__dirname, "./db/public/notes.html"));
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/index.html"));
+  res.sendFile(path.join(__dirname, "./db/public/index.html"));
 });
 
 app.listen(PORT, () => console.log("listening at http://localhost:${PORT}"));
