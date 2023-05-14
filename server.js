@@ -4,10 +4,12 @@ console.log(notes);
 const express = require("express");
 const path = require("path");
 const PORT = 3001;
-const id = Math.floor((1 + Math.random()) * 0x10000)
-  .toString(16)
-  .substring(1);
-console.log(id);
+const uuid = require("uuid")
+const noteId = uuid.v4()
+// const noteId = Math.floor((1 + Math.random()) * 0x10000)
+//   .toString(16)
+//   .substring(1);
+console.log(noteId);
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -20,12 +22,18 @@ app.get("/api/notes", (req, res) => {
 
 app.post("/api/notes", (req, res) => {
   const newNote = req.body;
-  newNote.id = id;
+  newNote.id = noteId;
   notes.push(newNote);
   fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
     err ? console.log(err) : res.send(newNote);
   });
 });
+
+app.delete("api/notes/:id", (req, res) =>{
+  const id = req.params.id;
+  res.unlink(id, "./db/db.json")
+  res.readFile(id, "./db/db/json")
+})
 
 app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
@@ -37,22 +45,3 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, () => console.log("listening at http://localhost:${PORT}"));
 
-// app.post("/api/notes", (req, res) => {
-//   const { title, text } = req.body;
-
-//   if (title && text) {
-//     const newNote = {
-//       title,
-//       text,
-//       note_id: id,
-//     };
-//     const response = {
-//         status: 'success',
-//         body: newNote
-//     }
-//     console.log(response)
-//     res.status(201).json(response)
-//   }else {
-//     res.status(500).json('Error in posting review');
-//   }
-// });
