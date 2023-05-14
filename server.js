@@ -4,12 +4,7 @@ console.log(notes);
 const express = require("express");
 const path = require("path");
 const PORT = 3001;
-const uuid = require("uuid")
-const noteId = uuid.v4()
-// const noteId = Math.floor((1 + Math.random()) * 0x10000)
-//   .toString(16)
-//   .substring(1);
-console.log(noteId);
+const uuid = require("uuid");
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -22,6 +17,7 @@ app.get("/api/notes", (req, res) => {
 
 app.post("/api/notes", (req, res) => {
   const newNote = req.body;
+  const noteId = uuid.v4();
   newNote.id = noteId;
   notes.push(newNote);
   fs.writeFile("./db/db.json", JSON.stringify(notes), (err) => {
@@ -39,4 +35,3 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, () => console.log("listening at http://localhost:${PORT}"));
-
